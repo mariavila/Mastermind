@@ -4,11 +4,11 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
-#define _XTAL_FREQ  4000000         // La freq¸Ëncia del rellotge Ès 4 MHz
-#define minipols PORTAbits.RA3      // Anomenem minipols a l'adreÁa PORTAbits.RA3
+#define _XTAL_FREQ  4000000         // La freq√º√®ncia del rellotge √©s 4 MHz
+#define minipols PORTAbits.RA3      // Anomenem minipols a l'adre√ßa PORTAbits.RA3
 unsigned char Sortida1, Sortida2; // Sortida2 correspon als bits del 8 al 15 i Sortida1 als bits del 0 al 7
 
-//DefiniciÛ de les variables globals que comentarem en el moment en quË s'usin
+//Definici√≥ de les variables globals que comentarem en el moment en qu√® s'usin
 unsigned char color1, nled, cpc, cc, codi1, codi2;
 bit bol;
 unsigned char r1, r2, r3, r4, tirades, nivell, durada, C;
@@ -17,7 +17,7 @@ int colors(char n);
 unsigned int canvi = 0;
 char Polsador();
 
-// DefiniciÛ de les funcions que farem servir
+// Definici√≥ de les funcions que farem servir
 void EnviaR16(char Valor1, char Valor2);
 void canviaColor(char led);
 void TocaNota(char ValPR2, char ValCCPR1L, char ValDC1B, unsigned char durada);
@@ -45,12 +45,12 @@ void main(void) {
     unsigned int partides2[10];
 
     while (1) {
-        if (canvi == 0) { //S'escull el nivell i es fa la combinaciÛ aleatÚria
+        if (canvi == 0) { //S'escull el nivell i es fa la combinaci√≥ aleat√≤ria
             PORTC = 0;
-            seed = 0; //…s la llavor que far‡ que cada partida tingui una combinaciÛ diferent de l'anterior
-            tirades = 0; //Tirada que est‡ fent el jugador
-            nivell = 0; // Nombre de tirades m‡ximes que tindr‡ el jugador
-            // bol es 1 en els nivells dificils (hi ha repeticions de colors) i Ès 0 en els nivells f‡cils (no hi ha repeticions)
+            seed = 0; //√âs la llavor que far√† que cada partida tingui una combinaci√≥ diferent de l'anterior
+            tirades = 0; //Tirada que est√† fent el jugador
+            nivell = 0; // Nombre de tirades m√†ximes que tindr√† el jugador
+            // bol es 1 en els nivells dificils (hi ha repeticions de colors) i √©s 0 en els nivells f√†cils (no hi ha repeticions)
             while (Polsador() != 5) {
                 seed++;
                 if (seed == 256) {
@@ -79,13 +79,13 @@ void main(void) {
                 EnviaR16(Sortida1, Sortida2);
 
             }
-            if (nivell < 4) { //Fins que no s'esculli el nivell no s'avanÁar‡ al seguent pas i sonar‡ una nota
+            if (nivell < 4) { //Fins que no s'esculli el nivell no s'avan√ßar√† al seguent pas i sonar√† una nota
                 TocaNota(189, 95, 0, 1);
                 TocaNota(189, 95, 0, 1);
             }
             srand(seed);
             if (Polsador() == 5 && nivell != 0) {
-                if (bol == 0) { // Es crea la combinaciÛ aleatÚria per als nivells f‡cils
+                if (bol == 0) { // Es crea la combinaci√≥ aleat√≤ria per als nivells f√†cils
                     TocaNota(238, 119, 2, 1);
                     TocaNota(158, 79, 2, 2);
                     r1 = (rand() % 8);
@@ -102,7 +102,7 @@ void main(void) {
                         r4 = (rand() % 8);
                     }
                 }
-                if (bol == 1) { // Es crea la combinaciÛ aleatÚria per als nivells difÌcils
+                if (bol == 1) { // Es crea la combinaci√≥ aleat√≤ria per als nivells dif√≠cils
                     TocaNota(238, 119, 2, 1);
                     TocaNota(158, 79, 2, 2);
                     r1 = (rand() % 8);
@@ -120,14 +120,14 @@ void main(void) {
             }
             PORTC = 1;
         }
-        if (canvi == 1) { //El jugador posa la combinaciÛ que vol provar
+        if (canvi == 1) { //El jugador posa la combinaci√≥ que vol provar
             tirades++;
             while (canvi == 1) {
                 if (Polsador() == 5) {
                     _delay(400000);
                     c = (256 * Sortida2)+(Sortida1);
                     if (bol == 0 && (c >> 13 == (c << 3) >> 13 || c >> 13 == (c << 6) >> 13 || c >> 13 == (c << 9) >> 13 || (c << 3) >> 13 == (c << 6) >> 13 || (c << 3) >> 13 == (c << 9) >> 13 || (c << 6) >> 13 == (c << 9) >> 13)) {
-                        //No es permet enviar colors repetits si s'est‡ en el nivell f‡cil
+                        //No es permet enviar colors repetits si s'est√† en el nivell f√†cil
                         TocaNota(189, 95, 0, 1);
                         TocaNota(189, 95, 0, 1);
                     } else {
@@ -135,15 +135,15 @@ void main(void) {
                     }
                     _delay(200000);
                 }
-                if (Polsador() != 5 | Polsador() != 0) { //Mostra la combinaciÛ que est‡ fent el jugador
+                if (Polsador() != 5 | Polsador() != 0) { //Mostra la combinaci√≥ que est√† fent el jugador
                     canviaColor(Polsador());
                     EnviaR16(Sortida1, Sortida2);
                     _delay(100000);
                 }
             }
         }
-        if (canvi == 2) { //ComprovaciÛ
-            unsigned char n = tirades % 4; //S'augmenta la tirada en la que s'est‡
+        if (canvi == 2) { //Comprovaci√≥
+            unsigned char n = tirades % 4; //S'augmenta la tirada en la que s'est√†
             C = 1;
             while (n > 0) {
                 C = C * 2;
@@ -174,7 +174,7 @@ void main(void) {
                 i++;
             }
             i = 0;
-            while (i < 4) { // Es comprova que el color sigui correcte i la posiciÛ no
+            while (i < 4) { // Es comprova que el color sigui correcte i la posici√≥ no
                 unsigned char cu = (c << i * 3) >> 13;
                 unsigned char j = 0;
                 if (ccor[i] == 0) {
@@ -190,7 +190,7 @@ void main(void) {
                 }
                 i++;
             }
-            // S'encenen els leds adients a la comprovaciÛ
+            // S'encenen els leds adients a la comprovaci√≥
             if (cpc == 1) {
                 codi1 = codi1 + 8;
                 codi2 = codi2 + 8;
@@ -229,7 +229,7 @@ void main(void) {
                     _delay(520000);
                     unsigned char posicio = tirades - 1;
                     while (1) {
-                        if (Polsador() == 2) { // Amb el polsador 2 s'accedeix a la combinaciÛ posterior
+                        if (Polsador() == 2) { // Amb el polsador 2 s'accedeix a la combinaci√≥ posterior
                             if (posicio == (tirades - 1)) {
                                 TocaNota(189, 95, 0, 1);
                                 TocaNota(189, 95, 0, 1);
@@ -237,7 +237,7 @@ void main(void) {
                                 posicio = posicio + 1;
                             }
                         }
-                        if (Polsador() == 1) { // Amb el polsador 1 s'accedeix a la combinaciÛ anterior
+                        if (Polsador() == 1) { // Amb el polsador 1 s'accedeix a la combinaci√≥ anterior
                             if (posicio == 0) {
                                 TocaNota(189, 95, 0, 1);
                                 TocaNota(189, 95, 0, 1);
@@ -251,7 +251,7 @@ void main(void) {
                         _delay(100000);
                         unsigned char D = 1;
                         unsigned char n = (posicio + 1) % 4;
-                        while (n > 0) { // S'indica la tirada que s'est‡ consultant en els leds vermells
+                        while (n > 0) { // S'indica la tirada que s'est√† consultant en els leds vermells
                             D = D * 2;
                             n = n - 1;
                         }
@@ -271,11 +271,11 @@ void main(void) {
                 _delay(120000);
                 canvi = 1;
             }
-            if (cpc == 4) { // Si s'han encertat tots els colors en posiciÛ correcte es passa a la victÚria
+            if (cpc == 4) { // Si s'han encertat tots els colors en posici√≥ correcte es passa a la vict√≤ria
                 EnviaR16(com1, com1 >> 8);
                 canvi = 3;
             }
-            if (tirades >= nivell) { // Si s'han superat el nombre de tirades m‡xim es passa a la derrota
+            if (tirades >= nivell) { // Si s'han superat el nombre de tirades m√†xim es passa a la derrota
                 Sortida1 = 0b00000000;
                 Sortida2 = 0b00000000;
                 EnviaR16(Sortida1, Sortida2);
@@ -285,7 +285,7 @@ void main(void) {
         }
 
         if (canvi == 3) { //VICTORIA!
-            //Sona m˙sica victoria i s'ensenya la combinaciÛ amb la que s'ha guanyat
+            //Sona m√∫sica victoria i s'ensenya la combinaci√≥ amb la que s'ha guanyat
             PORTC = 15;
             TocaNota(189, 95, 0, 2);
             TocaNota(189, 95, 0, 1);
@@ -308,8 +308,8 @@ void main(void) {
             __delay_ms(400);
             canvi = 5;
         }
-        if (canvi == 4) { //DERROTA : LÕMIT TIRADES
-            //Sona m˙sica i s'ensenya combinaciÛ guanyadora
+        if (canvi == 4) { //DERROTA : L√çMIT TIRADES
+            //Sona m√∫sica i s'ensenya combinaci√≥ guanyadora
             Sortida1 = 0b00000000;
             Sortida2 = 0b00000000;
             EnviaR16(Sortida1, Sortida2);
@@ -363,32 +363,32 @@ void EnviaR16(char Valor1, char Valor2) {
     char Port = 0; // Variable on guardem l'estat del port B
     char Temp; // Variable temporal
     for (int k = 1; k < 9; k++) { // Primer enviem Valor2
-        Temp = Valor2 & 0b10000000; // Agafa el bit de m»s a l'esquerra
-        // Temp nom»s podr? valer 0 o 128
+        Temp = Valor2 & 0b10000000; // Agafa el bit de m√às a l'esquerra
+        // Temp nom√às podr? valer 0 o 128
         if (Temp == 0) { // Si val 0
             Port = Port & 0b11101111; // Desactiva Data (bit 4)
         } else { // Si val 128
             Port = Port | 0b00010000; // Activa Data (bit 4)
         }
-        Valor2 = Valor2 << 1; // Rodem els bits per situar el seg∏ent
+        Valor2 = Valor2 << 1; // Rodem els bits per situar el seg¬∏ent
         PORTB = Port; // Ho posa al port B
-        Port = Port | 0b00100000; // Activa Clock (bit 5) i for¡a lectura
+        Port = Port | 0b00100000; // Activa Clock (bit 5) i for√Åa lectura
         PORTB = Port; // Ho posa al port B
         Port = Port & 0b11011111; // Desactiva Clock (bit 5)
         PORTB = Port; // Ho posa al port B
     }
-    for (int k = 1; k < 9; k++) { // Despr»s enviem Valor1
-        Temp = Valor1 & 0b10000000; // Agafa el bit de m»s a l'esquerra
-        // Temp nom»s podr? valer 0 o 128
+    for (int k = 1; k < 9; k++) { // Despr√às enviem Valor1
+        Temp = Valor1 & 0b10000000; // Agafa el bit de m√às a l'esquerra
+        // Temp nom√às podr? valer 0 o 128
         if (Temp == 0) { // Si val 0
             Port = Port & 0b11101111; // Desactiva Data (bit 4)
         } else { // Si val 128
 
             Port = Port | 0b00010000; // Activa Data (bit 4)
         }
-        Valor1 = Valor1 << 1; // Rodem els bits per situar el seg∏ent
+        Valor1 = Valor1 << 1; // Rodem els bits per situar el seg¬∏ent
         PORTB = Port; // Ho posa al port B
-        Port = Port | 0b00100000; // Activa Clock (bit 5) i for¡a lectura
+        Port = Port | 0b00100000; // Activa Clock (bit 5) i for√Åa lectura
         PORTB = Port; // Ho posa al port B
         Port = Port & 0b11011111; // Desactiva Clock (bit 5)
         PORTB = Port; // Ho posa al port B
@@ -468,16 +468,16 @@ void TocaNota(char ValPR2, char ValCCPR1L, char ValDC1B, unsigned char durada) {
     PR2 = ValPR2; // Carrega PR2
     CCP1CON = CCP1CON & 0b11001111; // Posa a zero els bits que corresponen a DC1B
     ValDC1B = ValDC1B % 4; // DC1B va de 0 a 3
-    ValDC1B = ValDC1B * 16; // DesplaÁa els bits a la posiciÛ que els correspon a CCP1CON
+    ValDC1B = ValDC1B * 16; // Despla√ßa els bits a la posici√≥ que els correspon a CCP1CON
     CCP1CON = CCP1CON + ValDC1B; // Coloca DC1B al seu lloc
-    CCPR1L = ValCCPR1L; // Carrega CCPR1L, registre que ens dÛna l'amplada de tON
-    PIR1bits.TMR2IF = 0; // Desactiva el bit d'interrupciÛ del Timer 2
+    CCPR1L = ValCCPR1L; // Carrega CCPR1L, registre que ens d√≥na l'amplada de tON
+    PIR1bits.TMR2IF = 0; // Desactiva el bit d'interrupci√≥ del Timer 2
     T2CON = 0b00000111; // Configura el Timer 2
     // bits T2KCPS (bits 1-0) a 11 prescalat de 16
     // bit 2 (TMR2ON) a 1, Timer activat
     // Postscaler TOUTPS (bits 6-3) no afecten al PWM
 
-    while (PIR1bits.TMR2IF == 0) // Espera l'activaciÛ del bit d'interrupciÛ del Timer 2
+    while (PIR1bits.TMR2IF == 0) // Espera l'activaci√≥ del bit d'interrupci√≥ del Timer 2
         ; // Esperem
     TRISC = 0b00000000; // Posem RC5 (sortida del PWM) com a sortida
     if (durada == 1) {
